@@ -1,0 +1,14 @@
+{
+  "name": "tmall-seller-mcp",
+  "version": "1.0.0",
+  "description": "天猫商家后台 MCP 服务器 - 提供登录、会话保持、页面操作能力",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "playwright-core": "^1.49.0"
+  }
+}

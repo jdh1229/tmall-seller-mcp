@@ -1,0 +1,23 @@
+# 依赖
+node_modules/
+
+# 账号信息（敏感数据）
+*.json
+!package.json
+!package-lock.json
+
+# 调试文件
+*.png
+*.log
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# 临时文件
+tmp/
+temp/
