@@ -161,6 +161,90 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           type: 'object',
           properties: {}
         }
+      },
+      {
+        name: 'tmall_execute_js',
+        description: '执行 JavaScript 代码（需要先登录）',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            script: {
+              type: 'string',
+              description: '要执行的 JavaScript 代码'
+            }
+          },
+          required: ['script']
+        }
+      },
+      {
+        name: 'tmall_wait',
+        description: '等待指定时间（毫秒）',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            ms: {
+              type: 'number',
+              description: '等待时间（毫秒）'
+            }
+          },
+          required: ['ms']
+        }
+      },
+      {
+        name: 'tmall_get_review_list',
+        description: '获取评价列表（结构化数据，需要先登录并导航到评价管理页面）',
+        inputSchema: {
+          type: 'object',
+          properties: {}
+        }
+      },
+      {
+        name: 'tmall_filter_reviews',
+        description: '筛选评价（需要先登录并导航到评价管理页面）',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            date: {
+              type: 'string',
+              description: '日期筛选：today/yesterday/7days/30days'
+            },
+            sentiment: {
+              type: 'string',
+              description: '情感分类：positive/negative/neutral/all'
+            },
+            contentType: {
+              type: 'array',
+              items: { type: 'string' },
+              description: '评价内容标签：["有内容", "有图片", "有视频", "有追评"]'
+            },
+            replyStatus: {
+              type: 'string',
+              description: '商家回复状态：已回复/未回复'
+            },
+            keyword: {
+              type: 'string',
+              description: '搜索关键词'
+            }
+          }
+        }
+      },
+      {
+        name: 'tmall_reply_review',
+        description: '回复单条评价（需要先登录并导航到评价管理页面）',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            reviewIndex: {
+              type: 'number',
+              description: '评价索引（从 0 开始，0 表示第一条）'
+            },
+            replyText: {
+              type: 'string',
+              description: '回复内容（最多 500 字）'
+            }
+          },
+          required: ['reviewIndex', 'replyText']
+        }
       }
     ]
   };
@@ -327,6 +411,69 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             {
               type: 'text',
               text: '浏览器已关闭'
+            }
+          ]
+        };
+      }
+
+      case 'tmall_execute_js': {
+        const { script } = args;
+        const result = await browserManager.executeJs(script);
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify(result, null, 2)
+            }
+          ]
+        };
+      }
+
+      case 'tmall_wait': {
+        const { ms } = args;
+        await browserManager.wait(ms);
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `已等待 ${ms} 毫秒`
+            }
+          ]
+        };
+      }
+
+      case 'tmall_get_review_list': {
+        const reviews = await browserManager.getReviewList();
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify(reviews, null, 2)
+            }
+          ]
+        };
+      }
+
+      case 'tmall_filter_reviews': {
+        const result = await browserManager.filterReviews(args);
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify(result, null, 2)
+            }
+          ]
+        };
+      }
+
+      case 'tmall_reply_review': {
+        const { reviewIndex, replyText } = args;
+        const result = await browserManager.replyReview(reviewIndex, replyText);
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify(result, null, 2)
             }
           ]
         };
