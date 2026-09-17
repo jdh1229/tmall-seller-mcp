@@ -85,6 +85,11 @@ npm install
 | `tmall_get_accounts` | 获取已保存账号 | 无 |
 | `tmall_save_account` | 保存账号 | `username`, `password`, `shopName?` |
 | `tmall_close` | 关闭浏览器 | 无 |
+| `tmall_execute_js` | 执行 JavaScript 代码 | `script` |
+| `tmall_wait` | 等待指定时间 | `ms` |
+| `tmall_get_review_list` | 获取评价列表（结构化数据） | 无 |
+| `tmall_filter_reviews` | 筛选评价 | `date?`, `sentiment?`, `contentType?`, `replyStatus?`, `keyword?` |
+| `tmall_reply_review` | 回复单条评价 | `reviewIndex`, `replyText` |
 
 ### 数据存储
 
