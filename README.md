@@ -73,23 +73,50 @@ npm install
 
 ### 工具列表
 
+#### 基础操作
+
 | 工具名 | 描述 | 参数 |
 |--------|------|------|
-| `tmall_login` | 登录商家后台 | `username`, `password`, `shopName?` |
-| `tmall_check_login` | 检查登录状态 | 无 |
-| `tmall_navigate` | 导航到页面 | `url` |
-| `tmall_get_content` | 获取页面内容 | `selector?` |
-| `tmall_click` | 点击元素 | `selector` |
-| `tmall_type` | 填写文本 | `selector`, `text` |
-| `tmall_screenshot` | 截图 | `path?` |
-| `tmall_get_accounts` | 获取已保存账号 | 无 |
-| `tmall_save_account` | 保存账号 | `username`, `password`, `shopName?` |
+| `tmall_login` | 登录商家后台 | `username`: 店铺账号, `password`: 密码, `shopName?`: 店铺名称 |
+| `tmall_check_login` | 检查当前登录状态 | 无 |
+| `tmall_navigate` | 导航到指定页面 | `url`: 目标页面 URL |
+| `tmall_get_content` | 获取页面内容 | `selector?`: CSS 选择器（不填则获取整个页面） |
+| `tmall_click` | 点击页面元素 | `selector`: CSS 选择器 |
+| `tmall_type` | 在输入框中填写文本 | `selector`: CSS 选择器, `text`: 文本内容 |
+| `tmall_screenshot` | 截取当前页面截图 | `path?`: 截图保存路径 |
+| `tmall_execute_js` | 执行 JavaScript 代码 | `script`: JS 代码字符串 |
+| `tmall_wait` | 等待指定时间 | `ms`: 等待毫秒数 |
 | `tmall_close` | 关闭浏览器 | 无 |
-| `tmall_execute_js` | 执行 JavaScript 代码 | `script` |
-| `tmall_wait` | 等待指定时间 | `ms` |
-| `tmall_get_review_list` | 获取评价列表（结构化数据） | 无 |
-| `tmall_filter_reviews` | 筛选评价 | `date?`, `sentiment?`, `contentType?`, `replyStatus?`, `keyword?` |
-| `tmall_reply_review` | 回复单条评价 | `reviewIndex`, `replyText` |
+
+#### 账号管理
+
+| 工具名 | 描述 | 参数 |
+|--------|------|------|
+| `tmall_get_accounts` | 获取已保存的所有店铺账号 | 无 |
+| `tmall_save_account` | 保存店铺账号（不登录） | `username`: 店铺账号, `password`: 密码, `shopName?`: 店铺名称 |
+
+#### 评价管理
+
+| 工具名 | 描述 | 参数 |
+|--------|------|------|
+| `tmall_filter_reviews` | 筛选评价（自动清除旧条件后搜索） | `date?`: today/yesterday/7days/30days, `sentiment?`: positive/negative/neutral, `contentType?`: ["有内容","有图片","有视频","有追评"], `replyStatus?`: 已回复/未回复, `keyword?`: 搜索关键词 |
+| `tmall_get_review_list` | 获取当前页面的评价列表（结构化数据） | 无 |
+| `tmall_reply_review` | 回复单条评价 | `reviewIndex`: 评价索引（从 0 开始）, `replyText`: 回复内容（最多 500 字） |
+
+**评价管理使用示例：**
+
+```
+// 查看今天的负面评价
+tmall_navigate({ url: "https://myseller.taobao.com/home.htm/comment-manage/list/rateWait4PC" })
+tmall_filter_reviews({ date: "today", sentiment: "negative" })
+tmall_get_review_list()
+
+// 回复第一条正面评价
+tmall_filter_reviews({ sentiment: "positive" })
+tmall_reply_review({ reviewIndex: 0, replyText: "感谢您的好评！" })
+```
+
+> 后续将陆续添加订单管理、商品管理、退款管理等页面的专用工具。
 
 ### 数据存储
 
